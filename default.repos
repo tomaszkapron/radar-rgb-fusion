@@ -1,0 +1,11 @@
+# List of repositories to use within your workspace
+# See https://github.com/dirk-thomas/vcstool
+repositories:
+  src/external/tools/create_pkg:
+    type: git
+    url: https://github.com/amadeuszsz/create_pkg.git
+    version: humble
+  src/rosparam_shortcuts:
+    type: git
+    url: https://github.com/PickNikRobotics/rosparam_shortcuts
+    version: ros2

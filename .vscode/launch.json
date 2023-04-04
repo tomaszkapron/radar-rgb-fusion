@@ -1,0 +1,73 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    // Base launch of a python file
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "args": ["--ros-args", "-r", "__ns:=${input:namespace}", "--params-file", "${workspaceFolder}/src/${input:dirs}/${input:package}/${input:config}"],
+      "console": "integratedTerminal",
+    },
+    // Base gdb launch of a ros executable
+    {
+      "name": "(gdb) Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/install/${input:package}/lib/${input:package}/${input:program}",
+      "args": ["--ros-args", "-r", "__ns:=${input:namespace}", "--params-file", "${workspaceFolder}/install/${input:package}/share/${input:package}/${input:config}"],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "package",
+      "type": "pickString",
+      "description": "Package name.",
+      "default": "",
+      "options": ["example_package"]
+    },
+    {
+      "id": "dirs",
+      "type": "pickString",
+      "description": "Package namespace (consecutive directories between src and package).",
+      "default": "",
+      "options": [""]
+    },
+    {
+      "id": "program",
+      "type": "pickString",
+      "description": "Program name.",
+      "default": "",
+      "options": ["example_node_exe"]
+    },
+    {
+      "id": "config",
+      "type": "pickString",
+      "description": "Config relative path.",
+      "default": "",
+      "options": ["param/defaults.param.yaml"]
+    },
+    {
+      "id": "namespace",
+      "type": "pickString",
+      "description": "Program namespace.",
+      "default": "/",
+      "options": ["/", "/example_namespace"]
+    }
+  ]
+}

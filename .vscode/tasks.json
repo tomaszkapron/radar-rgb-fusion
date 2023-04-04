@@ -1,0 +1,262 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        // Build tasks
+        {
+            "label": "build_release_workspace",
+            "detail": "Build workspace with release build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_debug_workspace",
+            "detail": "Build workspace with release build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_release_single_package",
+            "detail": "Build single package with release build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_debug_single_package",
+            "detail": "Build single package with debug build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_release_upto_package",
+            "detail": "Build up-to package with release build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_debug_upto_package",
+            "detail": "Build up-to package with debug build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        // Test tasks
+        {
+            "label": "test",
+            "detail": "Run all unit tests.",
+            "type": "shell",
+            "command": "colcon test && colcon test-result --verbose",
+            "problemMatcher": ["$gcc"]
+        },
+        // Clean
+        {
+            "label": "clean",
+            "detail": "Run the clean target",
+            "type": "shell",
+            "command": "colcon build --cmake-target clean",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "purge",
+            "detail": "Purge workspace by deleting all generated files.",
+            "type": "shell",
+            "command": "rm -r build install log && py3clean .",
+            "problemMatcher": []
+        },
+        // Linting and static code analysis tasks
+        {
+            "label": "fix",
+            "detail": "Reformat files with uncrustify.",
+            "type": "shell",
+            "command": "ament_uncrustify --reformat ${file}",
+            "problemMatcher": []
+        },
+        {
+            "label": "uncrustify",
+            "detail": "Lint files with uncrustify.",
+            "type": "shell",
+            "command": "ament_uncrustify ${file}",
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "silent",
+                "clear": true
+            },
+            "problemMatcher": [
+                {
+                    "owner": "uncrustify",
+                    "source": "uncrustify",
+                    "fileLocation": "relative",
+                    "pattern": [
+                        // just the file name message
+                        {
+                            "regexp": "^(.*)'(.*)':",
+                            "kind": "file",
+                            "file": 2,
+                            "message": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "cpplint",
+            "detail": "Lint files with cpplint.",
+            "type": "ament",
+            "task": "cpplint",
+            "path": "${file}",
+            "problemMatcher": [
+                "$ament_cpplint"
+            ],
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "silent",
+                "clear": true
+            },
+        },
+        {
+            "label": "cppcheck",
+            "detail": "Run static code checker cppcheck.",
+            "type": "ament",
+            "task": "cppcheck",
+            "path": "${file}",
+            "problemMatcher": [
+                "$ament_cppcheck"
+            ],
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "silent",
+                "clear": true
+            },
+        },
+        {
+            "label": "lint_cmake",
+            "detail": "Run lint on cmake files.",
+            "type": "ament",
+            "task": "lint_cmake",
+            "path": "${file}",
+            "problemMatcher": [
+                "$ament_lint_cmake"
+            ],
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "silent",
+                "clear": true
+            }
+        },
+        {
+            "label": "flake8",
+            "detail": "Run flake8 on python files.",
+            "type": "ament",
+            "task": "flake8",
+            "path": "${file}",
+            "problemMatcher": [
+                "$ament_flake8"
+            ],
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "silent",
+                "clear": true
+            }
+        },
+        {
+            "label": "pep257",
+            "detail": "Run pep257 on python files.",
+            "type": "ament",
+            "task": "pep257",
+            "path": "${file}",
+            "problemMatcher": [
+                "$ament_pep257"
+            ],
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "silent",
+                "clear": true
+            }
+        },
+        {
+            "label": "xmllint",
+            "detail": "Run xmllint on xml files.",
+            "type": "ament",
+            "task": "xmllint",
+            "path": "${file}",
+            "problemMatcher": [ 
+                "$ament_xmllint",
+            ],
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "silent",
+                "clear": true
+            }
+        },
+        // Workspace editing tasks
+        {
+            "label": "new ROS2 package",
+            "detail": "Create a new ROS2 package from a template.",
+            "type": "shell",
+            "command": "source ${workspaceFolder}/install/setup.bash && ros2 run create_pkg main.py --pkg-name ${input:package} --maintainer \"${input:maintainer}\" --email ${input:email} --description \"${input:description}\" --destination ${input:destination} --type ${input:type}",
+            "problemMatcher": []
+        },
+        {
+            "label": "import from workspace file",
+            "detail": "Use vcs to import modules specified by a workspace/rosinstall file.",
+            "type": "shell",
+            "command": "vcs import < default.repos",
+            "problemMatcher": []
+        },
+        {
+            "label": "update repositories",
+            "detail": "Use vcs to pull the latest version of all repositories in the workspace.",
+            "type": "shell",
+            "command": "vcs pull src",
+            "problemMatcher": []
+        },
+        {
+            "label": "install dependencies",
+            "detail": "Install all dependencies specified in the workspaces package.xml files.",
+            "type": "shell",
+            "command": "sudo apt-get update && rosdep install --from-paths src --ignore-src -yr || (rosdep update && rosdep install --from-paths src --ignore-src -yr)",
+            "problemMatcher": []
+        },
+    ],
+    "inputs": [
+        {
+          "id": "package",
+          "type": "promptString",
+          "description": "Package name"
+        },
+        {
+            "id": "maintainer",
+            "type": "promptString",
+            "description": "Package maintainer (name and surname)"
+        },
+        {
+            "id": "email",
+            "type": "promptString",
+            "description": "Maintainer email"
+        },
+        {
+            "id": "description",
+            "type": "promptString",
+            "description": "Package description"
+        },
+        {
+            "id": "destination",
+            "type": "promptString",
+            "default": "src",
+            "description": "Package destination (relative path from workspace root), without package"
+        },
+        {
+            "id": "type",
+            "type": "pickString",
+            "description": "Package type",
+            "default": "cpp",
+            "options": ["cpp", "python_cmake", "python_setuptools", "launch"]
+        },
+      ]
+}
