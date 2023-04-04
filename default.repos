@@ -1,11 +1,17 @@
 # List of repositories to use within your workspace
-# See https://github.com/dirk-thomas/vcstool
+
 repositories:
   src/external/tools/create_pkg:
     type: git
     url: https://github.com/amadeuszsz/create_pkg.git
     version: humble
-  src/rosparam_shortcuts:
+  src/external/ros2_numpy:
     type: git
-    url: https://github.com/PickNikRobotics/rosparam_shortcuts
-    version: ros2
+    url: https://github.com/Box-Robotics/ros2_numpy.git
+    version: humble
+  src/external/sensor_component/ainstein_radar_ros2:
+    type: git
+    url: https://github.com/PPI-PUT/ainstein_radar_ros2.git
+    version: master
+  
+
