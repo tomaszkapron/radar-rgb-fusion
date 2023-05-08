@@ -81,13 +81,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-humble-ros2-control \
     ros-humble-ros2-controllers \
     ros-humble-ros-testing \
-    ros-humble-rviz-visual-tools
+    ros-humble-rviz-visual-tools \
+    ros-humble-cv-bridge
 
 
 # install your custom python packages
-# RUN python3 -m pip --no-cache-dir install \
-#    package_name_1 \
-#    package_name_2
+RUN python3 -m pip --no-cache-dir install \
+    ultralytics
 
 
 # set up entrypoint

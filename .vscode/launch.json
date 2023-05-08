@@ -39,7 +39,7 @@
       "type": "pickString",
       "description": "Package name.",
       "default": "",
-      "options": ["example_package"]
+      "options": ["example_package", "street_object_detector_node"]
     },
     {
       "id": "dirs",
@@ -53,7 +53,7 @@
       "type": "pickString",
       "description": "Program name.",
       "default": "",
-      "options": ["example_node_exe"]
+      "options": ["example_node_exe","street_object_detector_node"]
     },
     {
       "id": "config",
