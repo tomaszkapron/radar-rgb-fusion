@@ -2,3 +2,5 @@ build/*
 install/*
 log/*
 src/external/*
+rosbag*
+yolov8n.pt
