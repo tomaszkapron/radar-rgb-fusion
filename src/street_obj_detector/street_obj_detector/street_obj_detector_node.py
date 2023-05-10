@@ -16,7 +16,10 @@
 
 import rclpy
 from rclpy.node import Node
-from street_obj_detector.street_obj_detector import StreetObjDetector
+try:
+    from street_obj_detector.street_obj_detector import StreetObjDetector
+except ImportError:
+    from street_obj_detector import StreetObjDetector
 
 from sensor_msgs.msg import Image
 
