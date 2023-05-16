@@ -31,6 +31,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     keyboard-configuration \
     locales \
     lsb-release \
+    python3-nose \
     python3-pip \
     software-properties-common \
     vim \
@@ -72,17 +73,23 @@ RUN curl -L https://raw.github.com/git/git/master/contrib/completion/git-prompt.
 
 # install your custom packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-humble-ament-cmake-nose \
     ros-humble-controller-interface \
+    ros-humble-cv-bridge \
     ros-humble-moveit \
     ros-humble-moveit-resources \
     ros-humble-moveit-visual-tools \
     ros-humble-rmw-cyclonedds-cpp \
+    ros-humble-pcl-msgs \
+    ros-humble-radar-msgs \
     ros-humble-robot-controllers \
     ros-humble-ros2-control \
     ros-humble-ros2-controllers \
+    ros-humble-ros2-socketcan \
     ros-humble-ros-testing \
     ros-humble-rviz-visual-tools \
-    ros-humble-cv-bridge
+    ros-humble-tf-transformations
+
 
 
 # install your custom python packages
