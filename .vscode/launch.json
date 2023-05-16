@@ -10,7 +10,7 @@
       "type": "python",
       "request": "launch",
       "program": "${file}",
-      "args": ["--ros-args", "-r", "__ns:=${input:namespace}", "--params-file", "${workspaceFolder}/src/${input:dirs}/${input:package}/${input:config}"],
+      "args": ["--ros-args", "-r", "__ns:=${input:namespace}", "--params-file", "${workspaceFolder}/src${input:dirs}/${input:package}/${input:config}"],
       "console": "integratedTerminal",
     },
     // Base gdb launch of a ros executable
@@ -39,7 +39,7 @@
       "type": "pickString",
       "description": "Package name.",
       "default": "",
-      "options": ["example_package", "street_object_detector_node"]
+      "options": ["example_package", "street_obj_detector"]
     },
     {
       "id": "dirs",
