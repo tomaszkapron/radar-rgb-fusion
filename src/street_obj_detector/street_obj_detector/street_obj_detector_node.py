@@ -22,6 +22,7 @@ except ImportError:
     from street_obj_detector import StreetObjDetector
 
 from sensor_msgs.msg import Image
+from yolov8_msgs.msg import Yolov8Inference
 
 
 class StreetObjDetectorNode(Node):
@@ -34,15 +35,19 @@ class StreetObjDetectorNode(Node):
             self.image_callback,
             10)
         
-        # self.detection_publisher = self.create_publisher(Image, 'yolov5/image', 10)
+        self.img_pub = self.create_publisher(Image, "/inference_result", 1)
+        self.yolov8_pub = self.create_publisher(Yolov8Inference, "/Yolov8_Inference", 1)
         
         param_name = self.declare_parameter('param_name', 456).value
         self.street_obj_detector.setParameters(param_name=param_name)
         
     def image_callback(self, msg):
         self.get_logger().info('I heard: msg')
-        detection = self.street_obj_detector.detect(msg)
-        # self.detection_publisher.publish(detection)
+        detection_image = self.street_obj_detector.detect(msg)[0]
+        detections = self.street_obj_detector.detect(msg)[1]
+        detections.header.stamp = self.get_clock().now().to_msg()
+        self.img_pub.publish(detection_image)
+        self.yolov8_pub.publish(detections)
 
 
 def main(args=None):
