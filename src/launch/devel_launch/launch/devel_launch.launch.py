@@ -40,6 +40,7 @@ def launch_setup(context, *args, **kwargs):
         arguments=["1.85", "0.0", "0.3", "-1.57", "0.0", "0.0", "base_link", "radar"]
     )
 
+
     rosbag = ExecuteProcess(
         cmd=[
             "ros2",
@@ -51,10 +52,18 @@ def launch_setup(context, *args, **kwargs):
         output="screen",
     )
     
+    street_obj_detector_node = Node(
+        package='street_obj_detector',
+        executable='street_obj_detector_node',
+        name='street_obj_detector_node',
+        parameters=[config_param.perform(context)]
+    )
+    
     return [
         rviz2,
         rosbag,
-        static_transform_publisher
+        static_transform_publisher,
+        street_obj_detector_node
         ]
 
 
