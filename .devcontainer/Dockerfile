@@ -93,7 +93,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # install your custom python packages
 RUN python3 -m pip --no-cache-dir install \
-    ultralytics
+    ultralytics \
+    pcl \
+    transforms3d
 
 # fix for https://github.com/NVlabs/instant-ngp/discussions/300
 RUN python3 -m pip uninstall -y \
