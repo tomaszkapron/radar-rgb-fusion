@@ -1,0 +1,5 @@
+/**:
+  ros__parameters:
+    input_image_topic: "/inference_image"
+    input_radar_topic: "/radar/tracked_points_T79"
+    radar_max_angle: 60.0  # maximal deg angle in rad, same as in sensor_msgs.LaserScan msg
