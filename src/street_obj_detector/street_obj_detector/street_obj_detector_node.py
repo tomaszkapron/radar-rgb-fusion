@@ -35,8 +35,8 @@ class StreetObjDetectorNode(Node):
             self.image_callback,
             10)
         
-        self.img_pub = self.create_publisher(Image, "/inference_result", 1)
-        self.yolov8_pub = self.create_publisher(Yolov8Inference, "/Yolov8_Inference", 1)
+        self.img_pub = self.create_publisher(Image, "/inference_image", 1)
+        self.yolov8_pub = self.create_publisher(Yolov8Inference, "/yolov8_inference", 1)
         
         param_name = self.declare_parameter('param_name', 456).value
         self.street_obj_detector.setParameters(param_name=param_name)

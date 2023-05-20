@@ -1,3 +1,4 @@
 /**:
   ros__parameters:
     param_name: 789
+    input_image_topic: "/camera/image_raw"
