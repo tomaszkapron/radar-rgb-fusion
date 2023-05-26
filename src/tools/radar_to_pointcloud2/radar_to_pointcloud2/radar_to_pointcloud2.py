@@ -35,7 +35,7 @@ class MinimalSubscriber(Node):
         self.subscription  # prevent unused variable warning
         self.publisher = self.create_publisher(
             PointCloud2,
-            "radar_to_pointcloud",
+            "radar_to_pointcloud_tracked",
             10
         )
 
