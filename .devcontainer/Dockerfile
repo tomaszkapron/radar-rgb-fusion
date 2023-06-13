@@ -73,6 +73,7 @@ RUN curl -L https://raw.github.com/git/git/master/contrib/completion/git-prompt.
 
 # install your custom packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-transforms3d \
     ros-humble-ament-cmake-nose \
     ros-humble-controller-interface \
     ros-humble-cv-bridge \
