@@ -32,21 +32,13 @@ def launch_setup(context, *args, **kwargs):
         arguments=['-d', str(config_rviz.perform(context))],
         condition=IfCondition(LaunchConfiguration('with_rviz'))
     )
-     
-    static_transform_publisher = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='static_transform_publisher',
-        arguments=["1.85", "0.0", "0.3", "-1.57", "0.0", "0.0", "base_link", "radar"]
-    )
-
 
     rosbag = ExecuteProcess(
         cmd=[
             "ros2",
             "bag",
             "play",
-            "--loop",
+            "--loop",   
             "/home/tomek/mgr_ws/rosbag2_2023_04_12-17_50_39",
         ],
         output="screen",
@@ -62,7 +54,6 @@ def launch_setup(context, *args, **kwargs):
     return [
         rviz2,
         rosbag,
-        static_transform_publisher,
         street_obj_detector_node
         ]
 

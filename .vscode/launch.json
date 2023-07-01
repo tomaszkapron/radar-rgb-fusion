@@ -39,7 +39,7 @@
       "type": "pickString",
       "description": "Package name.",
       "default": "",
-      "options": ["example_package", "street_obj_detector"]
+      "options": ["example_package", "street_obj_detector", "scan_detection_matcher"]
     },
     {
       "id": "dirs",
