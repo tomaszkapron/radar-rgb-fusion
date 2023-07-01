@@ -4,3 +4,5 @@ log/*
 src/external/*
 rosbag*
 yolov8n.pt
+**/__pycache__
+**/*.pyc
