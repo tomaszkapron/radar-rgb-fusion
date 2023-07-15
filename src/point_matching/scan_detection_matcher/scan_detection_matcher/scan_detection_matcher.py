@@ -63,7 +63,7 @@ class ScanDetectionMatcher:
     def visualize_scan(self, image: Image, radar_max_angle: float) -> Image:
         image_cv = self.br.imgmsg_to_cv2(image)
         image_with_scan = self.add_visualization(self.radar_scan, image_cv, radar_max_angle)
-        return self.br.cv2_to_imgmsg(image_with_scan)
+        return self.br.cv2_to_imgmsg(cv2.cvtColor(image_with_scan, cv2.COLOR_BGR2RGB))
     
     def add_visualization(self, scan: RadarScan, image: np.ndarray, radar_max_angle: float) -> np.ndarray:
         self.add_radar_to_image(scan, image)
@@ -130,6 +130,8 @@ class ScanDetectionMatcher:
             azimuth = measure.azimuth
             range = measure.range
             u, v = self.radar_detection_to_image2(range, azimuth)
+            
+            print('range: ', range, 'azimuth[deg]: ', azimuth ,'--> u: ', u, 'v: ', v)
             self.radar_detections.append(RadarDetection(u, v, range, measure.doppler_velocity))
             if 0 + dot_size <= u < WIDTH - dot_size and 0 + dot_size <= v < HEIGHT - dot_size:
                 cv2.circle(image, (int(round(u)), int(round(v))), 5, (0, 255, 0), -1)
@@ -151,5 +153,5 @@ class ScanDetectionMatcher:
                                 f"r={round(radar_detection.range, 2)}, v={round(radar_detection.velocity, 2)}", 
                                 (int(round(result.left)), int(round(result.top)) + 20), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 
-                                1, (255, 255, 255), 4)
+                                0.85, (174, 0, 0), 4)
                     break

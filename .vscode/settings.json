@@ -143,5 +143,6 @@
         "**/.git/objects/**",
         ".vscode",
         ".vscode-insiders",
-    ]
+    ],
+    "cmake.sourceDirectory": "/home/tomek/mgr_ws/src/point_matching/radar_image_projector"
 }

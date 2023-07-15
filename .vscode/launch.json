@@ -39,21 +39,21 @@
       "type": "pickString",
       "description": "Package name.",
       "default": "",
-      "options": ["example_package", "street_obj_detector", "scan_detection_matcher"]
+      "options": ["example_package", "street_obj_detector", "scan_detection_matcher", "radar_image_projector"]
     },
     {
       "id": "dirs",
       "type": "pickString",
       "description": "Package namespace (consecutive directories between src and package).",
       "default": "",
-      "options": [""]
+      "options": ["/point_matching"]
     },
     {
       "id": "program",
       "type": "pickString",
       "description": "Program name.",
       "default": "",
-      "options": ["example_node_exe","street_object_detector_node"]
+      "options": ["example_node_exe","street_object_detector_node", "radar_image_projector_node"]
     },
     {
       "id": "config",

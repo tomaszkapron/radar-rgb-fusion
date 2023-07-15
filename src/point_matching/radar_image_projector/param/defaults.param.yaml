@@ -1,0 +1,15 @@
+/**:
+  ros__parameters:
+    camera_matrix:
+      fx: 699.4761
+      fy: 697.332886
+      cx: 644.753403
+      cy: 509.920041
+
+    image_height: 1024
+    image_width: 1280
+
+    input_radar_topic: "/radar/raw_points_T79"
+    
+
+    
