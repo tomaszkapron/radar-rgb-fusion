@@ -18,11 +18,14 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(yolov8_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
     "msg/ProjectedRadar.msg"
     "msg/ProjectedRadarArray.msg"
-    DEPENDENCIES std_msgs
+    "msg/RadarDetectionMatch.msg"
+    "msg/RadarDetectionMatchArray.msg"
+    DEPENDENCIES std_msgs yolov8_msgs
  )
 ament_export_dependencies(rosidl_default_runtime)
 

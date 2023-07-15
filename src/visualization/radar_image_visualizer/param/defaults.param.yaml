@@ -1,0 +1,4 @@
+/**:
+  ros__parameters:
+    show_radar_projections: True
+    show_inference_image: True

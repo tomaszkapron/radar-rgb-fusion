@@ -1,0 +1,3 @@
+yolov8_msgs/InferenceResult yolo_detection
+float32 range
+float32 velocity
