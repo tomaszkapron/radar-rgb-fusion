@@ -37,19 +37,24 @@ class RadarImageVisualizerNode(Node):
         self.create_subscription(RadarDetectionMatchArray, "/radar_detection_match", self.match_callback, 1)
         self.create_subscription(Image, "/input_image", self.image_callback, 1)
 
-        self.create_publisher(Image, "/output_image", 1)
+        self.visualization_pub = self.create_publisher(Image, "/output_image", 1)
 
         self.radar_arr = ProjectedRadarArray()
         self.radar_match = RadarDetectionMatchArray()
 
-    def radar_callback(self, msg):
+    def radar_callback(self, msg: ProjectedRadarArray):
         self.radar_arr = msg
         
-    def match_callback(self, msg):
+    def match_callback(self, msg: RadarDetectionMatchArray):
         self.radar_match = msg
 
-    def image_callback(self, msg):
-        pass
+    def image_callback(self, msg: Image):
+        visualized = self.radar_image_visualizer.visualize_scan(
+            msg,
+            self.radar_arr,
+            self.radar_match
+        )
+        self.visualization_pub.publish(visualized)
 
 def main(args=None):
     rclpy.init(args=args)
