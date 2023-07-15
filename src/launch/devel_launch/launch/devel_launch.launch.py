@@ -53,7 +53,7 @@ def launch_setup(context, *args, **kwargs):
     
     return [
         rviz2,
-        rosbag,
+        # rosbag,
         street_obj_detector_node
         ]
 

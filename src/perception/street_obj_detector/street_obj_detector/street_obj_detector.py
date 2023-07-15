@@ -59,8 +59,8 @@ class StreetObjDetector:
                 b = box.xyxy[0].to('cpu').detach().numpy().copy()  # get box coordinates in (top, left, bottom, right) format
                 c = box.cls
                 inference_result.class_name = self.model.names[int(c)]
-                inference_result.top = int(b[0])
-                inference_result.left = int(b[1])
-                inference_result.bottom = int(b[2])
-                inference_result.right = int(b[3])
+                inference_result.top = int(b[1])
+                inference_result.left = int(b[0])
+                inference_result.bottom = int(b[3])
+                inference_result.right = int(b[2])
                 self.yolov8_inference.yolov8_inference.append(inference_result)

@@ -23,6 +23,7 @@ except ImportError:
     
 from sensor_msgs.msg import Image
 from radar_msgs.msg import RadarScan
+from yolov8_msgs.msg import Yolov8Inference
 
 
 class ScanDetectionMatcherNode(Node):
@@ -33,6 +34,7 @@ class ScanDetectionMatcherNode(Node):
         input_radar_topic = self.declare_parameter("input_radar_topic", "input_radar").value
         self.radar_max_angle = self.declare_parameter("radar_max_angle", 60.0).value
         self.radar_scan = RadarScan()
+        self.detections = Yolov8Inference()
         
         self.create_subscription(
             RadarScan,
@@ -48,20 +50,29 @@ class ScanDetectionMatcherNode(Node):
             1
         )
         
+        self.create_subscription(
+            Yolov8Inference,
+            "yolov8_inference",
+            self.yolo_callback,
+            1
+        )
+        
         self.visualization_pub = self.create_publisher(Image, "output_image", 1)
             
             
     def scan_callback(self, msg: RadarScan):
-        self.radar_scan = msg
+        self.scan_detection_matcher.radar_scan = msg
     
     def image_callback(self, msg: Image):
         visualized = self.scan_detection_matcher.visualize_scan(
-            self.radar_scan,
             msg,
             self.radar_max_angle
         )
         self.visualization_pub.publish(visualized)
-
+        
+    def yolo_callback(self, msg: Yolov8Inference):
+        self.scan_detection_matcher.yolo_detections = msg
+    
 def main(args=None):
     rclpy.init(args=args)
     node = ScanDetectionMatcherNode()

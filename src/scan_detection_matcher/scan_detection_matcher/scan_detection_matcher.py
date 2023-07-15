@@ -19,39 +19,59 @@ import cv2
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 from radar_msgs.msg import RadarScan
+from yolov8_msgs.msg import Yolov8Inference
+from dataclasses import dataclass
 
 CAM_MAT = np.mat([[699.4761, 0.0,        644.753403],
                   [0.0,      697.332886, 509.920041],
                   [0.0,      0.0,        1.0]])
 
 T = np.mat([[1.0, 0.0, 0.0, 0.2],
-            [0.0, 1.0, 0.0, 1.85],
-            [0.0, 0.0, 1.0, 0.3],
+            [0.0, 0.9981348, -0.0610485, 1.85],
+            [0.0, 0.0610485,  0.9981348, 0.3],
             [0.0, 0.0, 0.0, 1.0]])
 
 HEIGHT = 1024
 WIDTH = 1280
 
+@dataclass
+class RadarDetection:
+    u: int
+    v: int
+    range: float
+    velocity: float
+
 
 class ScanDetectionMatcher:
     def __init__(self) -> None:
-        self.camera_identification()
         self.br = CvBridge()
+        
+        self.radar_detections = []
+        
+        self.radar_scan = RadarScan()
+        self.yolo_detections = Yolov8Inference()
+        
+        self.add_strip = False # TODO: add parameter
+        self.debug = False # TODO: add parameter
+        
+        if self.debug:
+            self.camera_identification()
         
     def linear_mapping(self, x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-    def visualize_scan(self, scan: RadarScan, image: Image, radar_max_angle: float) -> Image:
+    def visualize_scan(self, image: Image, radar_max_angle: float) -> Image:
         image_cv = self.br.imgmsg_to_cv2(image)
-        image_with_scan = self.add_visualization(scan, image_cv, radar_max_angle)
+        image_with_scan = self.add_visualization(self.radar_scan, image_cv, radar_max_angle)
         return self.br.cv2_to_imgmsg(image_with_scan)
     
     def add_visualization(self, scan: RadarScan, image: np.ndarray, radar_max_angle: float) -> np.ndarray:
-        height, width, _ = image.shape
         self.add_radar_to_image(scan, image)
-        # strip = self.create_strip(scan, width, radar_max_angle)
         
-        # image_with_strip = np.concatenate((image, strip), axis=0)
+        if self.add_strip:
+            strip = self.create_strip(scan, WIDTH, radar_max_angle)
+            image = np.concatenate((image, strip), axis=0)
+            
         return image
         
     def create_strip(self, scan: RadarScan, width: int, radar_max_angle: float) -> np.ndarray:
@@ -70,19 +90,6 @@ class ScanDetectionMatcher:
             strip[0:25, start_x:end_x] = (0, 255, 0)
             
         return strip
-
-    def radar_detection_to_image(self, range: float, azimuth: float) -> tuple:     
-        Xr = range * np.sin(azimuth * np.pi / 180.0)
-        Yr = range * np.cos(azimuth * np.pi / 180.0)
-        Zr = 0.0
-        
-        UV  = np.dot(np.dot(CAM_MAT, T), np.transpose(np.mat([Xr, Yr, Zr, 1.0])))
-        
-        u = UV[0, 0]
-        v = UV[1, 0]
-        
-        print('range: ', range, 'azimuth[deg]: ', azimuth ,'--> u: ', u, 'v: ', v)
-        return (u, v)
     
     def radar_detection_to_image2(self, range: float, azimuth: float) -> tuple:     
         Xr = range * np.sin(azimuth * np.pi / 180.0)
@@ -97,7 +104,9 @@ class ScanDetectionMatcher:
         u = CAM_MAT[0, 0] * X_norm + CAM_MAT[0, 2]
         v = CAM_MAT[1, 1] * Y_norm + CAM_MAT[1, 2]
         
-        print('range: ', range, 'azimuth[deg]: ', azimuth ,'--> u: ', u, 'v: ', v)
+        if self.debug:
+            print('range: ', range, 'azimuth[deg]: ', azimuth ,'--> u: ', u, 'v: ', v)
+
         return (u, v)
         
         
@@ -115,10 +124,32 @@ class ScanDetectionMatcher:
         print(f"  {fov_y = :.1f}\N{DEGREE SIGN}")
         
     def add_radar_to_image(self, scan: RadarScan, image: np.ndarray) -> np.ndarray:
+        self.radar_detections = []
         dot_size = 5
         for measure in scan.returns:
             azimuth = measure.azimuth
             range = measure.range
             u, v = self.radar_detection_to_image2(range, azimuth)
+            self.radar_detections.append(RadarDetection(u, v, range, measure.doppler_velocity))
             if 0 + dot_size <= u < WIDTH - dot_size and 0 + dot_size <= v < HEIGHT - dot_size:
                 cv2.circle(image, (int(round(u)), int(round(v))), 5, (0, 255, 0), -1)
+        
+        self.match_detections(image)
+
+    def match_detections(self, image: np.ndarray) -> None:
+        for result in self.yolo_detections.yolov8_inference:
+            for radar_detection in self.radar_detections:
+                if result.left <= radar_detection.u <= result.right and result.top <= radar_detection.v <= result.bottom:
+                    if self.debug:
+                        print('radar detection in bounding box')
+                        print('range: ', radar_detection.range, 'velocity: ', radar_detection.velocity)
+                        print('x: ', radar_detection.u, 'y: ', radar_detection.v)
+                        print('class: ', result.class_name)
+                        print('-----------------')
+
+                    cv2.putText(image, 
+                                f"r={round(radar_detection.range, 2)}, v={round(radar_detection.velocity, 2)}", 
+                                (int(round(result.left)), int(round(result.top)) + 20), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 
+                                1, (255, 255, 255), 4)
+                    break
