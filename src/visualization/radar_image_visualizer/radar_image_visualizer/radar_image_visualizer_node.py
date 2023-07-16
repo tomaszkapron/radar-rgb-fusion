@@ -34,7 +34,7 @@ class RadarImageVisualizerNode(Node):
         show_radar = self.declare_parameter("show_radar_projections", True).value # TODO: handle
 
         self.create_subscription(ProjectedRadarArray, "/projected_radar", self.radar_callback, 1)
-        self.create_subscription(RadarDetectionMatchArray, "/radar_detection_match", self.match_callback, 1)
+        self.create_subscription(RadarDetectionMatchArray, "/matched_detections", self.match_callback, 1)
         self.create_subscription(Image, "/input_image", self.image_callback, 1)
 
         self.visualization_pub = self.create_publisher(Image, "/output_image", 1)

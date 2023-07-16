@@ -19,6 +19,7 @@ import cv2
 
 from sensor_msgs.msg import Image
 from projected_radar_msgs.msg import ProjectedRadarArray
+from projected_radar_msgs.msg import RadarDetectionMatchArray
 
 class RadarImageVisualizer:
     def __init__(self) -> None:
@@ -39,7 +40,7 @@ class RadarImageVisualizer:
                0 + self.dot_size <= projection.v < self.height - self.dot_size:
                 cv2.circle(image_cv, (int(projection.u), int(projection.v)), self.dot_size, (0, 255, 0), -1)
                 
-    def add_radar_matches(self, image_cv: Image, radar_match: ProjectedRadarArray):
+    def add_radar_matches(self, image_cv: Image, radar_match: RadarDetectionMatchArray):
         for match in radar_match.radar_match_array:
             cv2.putText(image_cv, 
                         f"r={round(match.range, 2)}, v={round(match.velocity, 2)}", 
