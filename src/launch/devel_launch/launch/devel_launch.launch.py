@@ -13,9 +13,14 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction, ExecuteProcess
+from launch.actions import DeclareLaunchArgument
+from launch.actions import ExecuteProcess
+from launch.actions import IncludeLaunchDescription
+from launch.actions import OpaqueFunction
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
+from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -43,18 +48,48 @@ def launch_setup(context, *args, **kwargs):
         ],
         output="screen",
     )
-    
+
     street_obj_detector_node = Node(
         package='street_obj_detector',
         executable='street_obj_detector_node',
         name='street_obj_detector_node',
         parameters=[config_param.perform(context)]
     )
+
+    radar_image_projector_prefix = FindPackageShare("radar_image_projector")
+    radar_image_projector = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            launch_file_path=PathJoinSubstitution(
+                [radar_image_projector_prefix, 'launch', 'radar_image_projector.launch.py']
+            ),
+        )
+    )
+
+    radar_detection_matcher_prefix = FindPackageShare("radar_detection_matcher")
+    radar_detection_matcher = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            launch_file_path=PathJoinSubstitution(
+                [radar_detection_matcher_prefix, 'launch', 'radar_detection_matcher.launch.py']
+            ),
+        )
+    )
+
+    radar_image_visualizer_prefix = FindPackageShare("radar_image_visualizer")
+    radar_image_visualizer_projector = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            launch_file_path=PathJoinSubstitution(
+                [radar_image_visualizer_prefix, 'launch', 'radar_image_visualizer.launch.py']
+            ),
+        )
+    )
     
     return [
         rviz2,
-        # rosbag,
-        street_obj_detector_node
+        rosbag,
+        street_obj_detector_node,
+        radar_image_projector,
+        radar_detection_matcher,
+        radar_image_visualizer_projector
         ]
 
 
