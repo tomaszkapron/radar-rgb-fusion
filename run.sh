@@ -4,4 +4,4 @@ rocker --network host --privileged --nvidia --x11 --user --group-add plugdev --g
     --env "RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" \
     --env "ROS_DOMAIN_ID=0" \
     --volume "${PWD}:${HOME}/${PWD##*/}" \
-    -- mgr/moveit:humble 
+    -- mgr/mgr:humble 
