@@ -27,8 +27,9 @@ from launch_ros.substitutions import FindPackageShare
 
 def launch_setup(context, *args, **kwargs):
     pkg_prefix = FindPackageShare("devel_launch")
-    config_param = PathJoinSubstitution([pkg_prefix, LaunchConfiguration('config_param_file')])
-    config_rviz = PathJoinSubstitution([pkg_prefix, 'rviz/devel.rviz'])
+
+    config_rviz = PathJoinSubstitution(
+        [pkg_prefix, 'rviz', LaunchConfiguration('rosbag_source').perform(context) + '.rviz'])
 
     rviz2 = Node(
         package='rviz2',
@@ -49,11 +50,13 @@ def launch_setup(context, *args, **kwargs):
         output="screen",
     )
 
-    street_obj_detector_node = Node(
-        package='street_obj_detector',
-        executable='street_obj_detector_node',
-        name='street_obj_detector_node',
-        parameters=[config_param.perform(context)]
+    street_obj_detector_prefix = FindPackageShare("street_obj_detector")
+    street_obj_detector = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            launch_file_path=PathJoinSubstitution(
+                [street_obj_detector_prefix, 'launch', 'street_obj_detector.launch.py']
+            ),
+        )
     )
 
     radar_image_projector_prefix = FindPackageShare("radar_image_projector")
@@ -85,8 +88,8 @@ def launch_setup(context, *args, **kwargs):
     
     return [
         rviz2,
-        rosbag,
-        street_obj_detector_node,
+        # rosbag,
+        street_obj_detector,
         radar_image_projector,
         radar_detection_matcher,
         radar_image_visualizer_projector
@@ -96,21 +99,15 @@ def launch_setup(context, *args, **kwargs):
 def generate_launch_description():
     declared_arguments = []
 
-    declared_arguments.append(
-            DeclareLaunchArgument(
-                'config_param_file',
-                default_value='param/defaults.param.yaml',
-                description='Node config (relative path).'
-            )
-    )
+    def add_launch_arg(name: str, default_value: str = None):
+        declared_arguments.append(
+            DeclareLaunchArgument(name, default_value=default_value)
+        )
 
-    declared_arguments.append(
-            DeclareLaunchArgument(
-                'with_rviz',
-                default_value='True',
-                description='Run RViz2.'
-            )
-    )
+    add_launch_arg('with_rviz', 'True')
+
+    add_launch_arg('rosbag_source', 'local') # nuscenes, local
+
 
     return LaunchDescription([
         *declared_arguments,
