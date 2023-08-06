@@ -31,7 +31,7 @@ class StreetObjDetectorNode(Node):
         self.street_obj_detector = StreetObjDetector()
         self.subscription = self.create_subscription(
             Image,
-            '/camera/image_raw',
+            "input_image",
             self.image_callback,
             10)
         

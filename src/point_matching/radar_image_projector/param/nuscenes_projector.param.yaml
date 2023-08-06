@@ -1,0 +1,29 @@
+/**:
+  ros__parameters:
+    camera_matrix:
+      fx: 1266.417203046554
+      fy: 1266.417203046554
+      cx: 816.2670197447984
+      cy: 491.50706579294757
+    camera_radar_transform:
+      translation:
+        x: 1.711
+        y: 1.011
+        z: 0.025 
+        # x: -0.025
+        # y: 1.001
+        # z: 1.717
+      rotation:
+        # x: 0.502
+        # y: -0.501
+        # z: 0.498
+        # w: 0.499
+        x: 0.003
+        y: -0.000006
+        z: 0.001
+        w: 0.999995
+
+    image_height: 900
+    image_width: 1600
+
+    input_radar_topic: "/RADAR_FRONT"

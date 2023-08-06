@@ -56,7 +56,10 @@ def launch_setup(context, *args, **kwargs):
             launch_file_path=PathJoinSubstitution(
                 [street_obj_detector_prefix, 'launch', 'street_obj_detector.launch.py']
             ),
-        )
+        ),
+        launch_arguments={
+            'input_image_topic': LaunchConfiguration('input_image_topic')
+        }.items()
     )
 
     radar_image_projector_prefix = FindPackageShare("radar_image_projector")
@@ -65,7 +68,11 @@ def launch_setup(context, *args, **kwargs):
             launch_file_path=PathJoinSubstitution(
                 [radar_image_projector_prefix, 'launch', 'radar_image_projector.launch.py']
             ),
-        )
+        ),
+        launch_arguments={
+            'input_radar_topic': LaunchConfiguration('input_radar_topic'),
+            'config_param_file_projector': LaunchConfiguration('rosbag_source').perform(context)
+        }.items()
     )
 
     radar_detection_matcher_prefix = FindPackageShare("radar_detection_matcher")
@@ -85,7 +92,7 @@ def launch_setup(context, *args, **kwargs):
             ),
         )
     )
-    
+
     return [
         rviz2,
         # rosbag,
@@ -106,7 +113,13 @@ def generate_launch_description():
 
     add_launch_arg('with_rviz', 'True')
 
-    add_launch_arg('rosbag_source', 'local') # nuscenes, local
+    add_launch_arg('rosbag_source', 'nuscenes') # nuscenes, local
+    add_launch_arg('input_image_topic', '/CAM_FRONT/image_rect_compressed') #  '/CAM_FRONT_LEFT/image_rect_compressed' ,'/camera/image_raw'
+    add_launch_arg('input_radar_topic', '/RADAR_FRONT') # '/RADAR_FRONT', '/radar/raw_points_T79'
+
+    # add_launch_arg('rosbag_source', 'local')
+    # add_launch_arg('input_image_topic', '/camera/image_raw')
+    # add_launch_arg('input_radar_topic', '/radar/raw_points_T79')
 
 
     return LaunchDescription([

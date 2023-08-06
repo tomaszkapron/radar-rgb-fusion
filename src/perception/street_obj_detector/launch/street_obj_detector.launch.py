@@ -21,7 +21,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def launch_setup(context, *args, **kwargs):
     pkg_prefix = FindPackageShare("street_obj_detector")
-    config_param = PathJoinSubstitution([pkg_prefix, LaunchConfiguration('config_param_file')])
+    config_param = PathJoinSubstitution([pkg_prefix, LaunchConfiguration('config_param_file_detector')])
 
     street_obj_detector_node = Node(
             name='street_obj_detector_node',
@@ -31,9 +31,12 @@ def launch_setup(context, *args, **kwargs):
             parameters=[
                 config_param
             ],
+            remappings=[
+                ('~/input_image', LaunchConfiguration('input_image_topic'))
+            ],
             output='screen',
             arguments=['--ros-args', '--log-level', 'info', '--enable-stdout-logs'],
-            emulate_tty=True
+            emulate_tty=True,
     )
 
     return [street_obj_detector_node]
@@ -44,10 +47,18 @@ def generate_launch_description():
 
     declared_arguments.append(
             DeclareLaunchArgument(
-                'config_param_file',
+                'config_param_file_detector',
                 default_value='param/defaults.param.yaml',
                 description='Node config (relative path).'
             )
+    )
+
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'input_image_topic',
+            default_value='/camera/image_raw'
+        )
     )
 
     return LaunchDescription([

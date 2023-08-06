@@ -20,20 +20,9 @@ from projected_radar_msgs.msg import ProjectedRadarArray
 from projected_radar_msgs.msg import ProjectedRadar
 
 class RadarImageProjector:
-    def __init__(self, fx, fy, cx, cy) -> None:
-        self.fx_ = fx
-        self.fy_ = fy
-        self.cx_ = cx
-        self.cy_ = cy
-        self.cam_mat_ = np.mat([[self.fx_, 0.0,      self.cx_],
-                                [0.0,      self.fy_, self.cy_],
-                                [0.0,      0.0,      1.0]])
-        
-        self.T = np.mat([[1.0, 0.0,        0.0,       0.2 ],
-                         [0.0, 0.9981348, -0.0610485, 1.85],
-                         [0.0, 0.0610485,  0.9981348, 0.3 ],
-                         [0.0, 0.0,        0.0,       1.0 ]])
-        
+    def __init__(self, cam_mat, tran_matrix) -> None:
+        self.cam_mat_ = cam_mat
+        self.T = tran_matrix
          
     def project_radar_scan(self, msg: RadarScan) -> ProjectedRadarArray:
         projectedRadarArrMsg = ProjectedRadarArray()
@@ -52,8 +41,8 @@ class RadarImageProjector:
         return projectedRadarArrMsg
     
     def radar_detection_to_image2(self, range: float, azimuth: float) -> tuple:     
-        Xr = range * np.sin(azimuth * np.pi / 180.0)
-        Zr = range * np.cos(azimuth * np.pi / 180.0)
+        Xr = range * np.sin(azimuth ) #* np.pi / 180.0)
+        Zr = range * np.cos(azimuth ) #* np.pi / 180.0)
         Yr = 0.0
         
         P_camera = np.dot(self.T, np.transpose(np.mat([Xr, Yr, Zr, 1.0])))
@@ -66,3 +55,40 @@ class RadarImageProjector:
 
         return (u, v)
 
+    def prepare_camera_matrix(fx, fy, cx, cy):
+        cam_mat_ = np.mat([[fx,  0.0, cx ],
+                           [0.0, fy,  cy ],
+                           [0.0, 0.0, 1.0]])
+        return cam_mat_
+    
+    def prepare_transformation_matrix(Tx, Ty, Tz, Rx, Ry, Rz, Rw):
+        def quaternion_rotation_matrix(Q):
+            q0 = Q[0]
+            q1 = Q[1]
+            q2 = Q[2]
+            q3 = Q[3]
+
+            r00 = 2 * (q0 * q0 + q1 * q1) - 1
+            r01 = 2 * (q1 * q2 - q0 * q3)
+            r02 = 2 * (q1 * q3 + q0 * q2)
+
+            r10 = 2 * (q1 * q2 + q0 * q3)
+            r11 = 2 * (q0 * q0 + q2 * q2) - 1
+            r12 = 2 * (q2 * q3 - q0 * q1)
+
+            r20 = 2 * (q1 * q3 - q0 * q2)
+            r21 = 2 * (q2 * q3 + q0 * q1)
+            r22 = 2 * (q0 * q0 + q3 * q3) - 1
+
+            rot_matrix = np.array([[r00, r01, r02],
+                                [r10, r11, r12],
+                                [r20, r21, r22]])
+                                
+            return rot_matrix
+        
+        R = quaternion_rotation_matrix([Rx, Ry, Rz, Rw])
+        T = np.mat([[R[0,0], R[0,1], R[0,2], Tx],
+                    [R[1,0], R[1,1], R[1,2], Ty],
+                    [R[2,0], R[2,1], R[2,2], Tz],
+                    [0.0, 0.0, 0.0, 1.0]])
+        return T

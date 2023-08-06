@@ -21,7 +21,9 @@ from launch_ros.substitutions import FindPackageShare
 
 def launch_setup(context, *args, **kwargs):
     pkg_prefix = FindPackageShare("radar_image_projector")
-    config_param = PathJoinSubstitution([pkg_prefix, LaunchConfiguration('config_param_file')])
+    config_param = PathJoinSubstitution([pkg_prefix, 'param', LaunchConfiguration('config_param_file_projector').perform(context) + '_projector.param.yaml'])
+
+    print(str(config_param.perform(context)))
 
     radar_image_projector_node = Node(
             name='radar_image_projector_node',
@@ -30,6 +32,9 @@ def launch_setup(context, *args, **kwargs):
             executable='radar_image_projector_node.py',
             parameters=[
                 config_param
+            ],
+            remappings=[
+                ('/input_radar_topic', LaunchConfiguration('input_radar_topic'))
             ],
             output='screen',
             arguments=['--ros-args', '--log-level', 'info', '--enable-stdout-logs'],
@@ -44,10 +49,17 @@ def generate_launch_description():
 
     declared_arguments.append(
             DeclareLaunchArgument(
-                'config_param_file',
+                'config_param_file_projector',
                 default_value='param/defaults.param.yaml',
                 description='Node config (relative path).'
             )
+    )
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'input_radar_topic',
+            default_value='/radar/raw_points_T79'
+        )
     )
 
     return LaunchDescription([

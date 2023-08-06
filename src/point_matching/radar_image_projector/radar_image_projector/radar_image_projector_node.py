@@ -33,14 +33,23 @@ class RadarImageProjectorNode(Node):
         camera_fy = self.declare_parameter('camera_matrix.fy', 100.0).value
         camera_cx = self.declare_parameter('camera_matrix.cx', 100.0).value
         camera_cy = self.declare_parameter('camera_matrix.cy', 100.0).value
+
+        T_x = self.declare_parameter('camera_radar_transform.translation.x', 0.0).value
+        T_y = self.declare_parameter('camera_radar_transform.translation.y', 0.0).value
+        T_z = self.declare_parameter('camera_radar_transform.translation.z', 0.0).value
+        R_x = self.declare_parameter('camera_radar_transform.rotation.x', 0.0).value
+        R_y = self.declare_parameter('camera_radar_transform.rotation.y', 0.0).value
+        R_z = self.declare_parameter('camera_radar_transform.rotation.z', 0.0).value
+        R_w = self.declare_parameter('camera_radar_transform.rotation.w', 0.0).value
+
+        camera_matrix = RadarImageProjector.prepare_camera_matrix(camera_fx, camera_fy, camera_cx, camera_cy)
+        transform_matrix = RadarImageProjector.prepare_transformation_matrix(T_x, T_y, T_z, R_x, R_y, R_z, R_w)
         
-        self.radar_image_projector = RadarImageProjector(camera_fx, camera_fy, camera_cx, camera_cy)
-        
-        input_radar_topic = self.declare_parameter("input_radar_topic", "input_image").value
+        self.radar_image_projector = RadarImageProjector(camera_matrix, transform_matrix)
 
         self.create_subscription(
             RadarScan,
-            input_radar_topic,
+            "input_radar_topic",
             self.scan_callback,
             1
         )
