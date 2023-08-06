@@ -34,6 +34,10 @@ class RadarImageProjectorNode(Node):
         camera_cx = self.declare_parameter('camera_matrix.cx', 100.0).value
         camera_cy = self.declare_parameter('camera_matrix.cy', 100.0).value
 
+        print("camera_fx: ", camera_fx)
+        print("camera_fy: ", camera_fy)
+        print("camera_cx: ", camera_cx)
+
         T_x = self.declare_parameter('camera_radar_transform.translation.x', 0.0).value
         T_y = self.declare_parameter('camera_radar_transform.translation.y', 0.0).value
         T_z = self.declare_parameter('camera_radar_transform.translation.z', 0.0).value

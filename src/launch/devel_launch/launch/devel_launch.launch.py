@@ -90,7 +90,11 @@ def launch_setup(context, *args, **kwargs):
             launch_file_path=PathJoinSubstitution(
                 [radar_image_visualizer_prefix, 'launch', 'radar_image_visualizer.launch.py']
             ),
-        )
+        ),
+        launch_arguments={
+            'image_width': LaunchConfiguration('image_width'),
+            'image_height': LaunchConfiguration('image_height')
+        }.items()
     )
 
     return [
@@ -116,10 +120,14 @@ def generate_launch_description():
     add_launch_arg('rosbag_source', 'nuscenes') # nuscenes, local
     add_launch_arg('input_image_topic', '/CAM_FRONT/image_rect_compressed') #  '/CAM_FRONT_LEFT/image_rect_compressed' ,'/camera/image_raw'
     add_launch_arg('input_radar_topic', '/RADAR_FRONT') # '/RADAR_FRONT', '/radar/raw_points_T79'
+    add_launch_arg('image_width', '1600')
+    add_launch_arg('image_height', '900')
 
     # add_launch_arg('rosbag_source', 'local')
     # add_launch_arg('input_image_topic', '/camera/image_raw')
     # add_launch_arg('input_radar_topic', '/radar/raw_points_T79')
+    # add_launch_arg('image_width', 1280)
+    # add_launch_arg('image_height', 1024)
 
 
     return LaunchDescription([

@@ -29,9 +29,12 @@ from sensor_msgs.msg import Image
 class RadarImageVisualizerNode(Node):
     def __init__(self):
         super().__init__("radar_image_visualizer_node")
-        self.radar_image_visualizer = RadarImageVisualizer()
         
         show_radar = self.declare_parameter("show_radar_projections", True).value # TODO: handle
+        width = self.declare_parameter("image_width", 640).value
+        height = self.declare_parameter("image_height", 480).value
+
+        self.radar_image_visualizer = RadarImageVisualizer(width, height)
 
         self.create_subscription(ProjectedRadarArray, "/projected_radar", self.radar_callback, 1)
         self.create_subscription(RadarDetectionMatchArray, "/matched_detections", self.match_callback, 1)

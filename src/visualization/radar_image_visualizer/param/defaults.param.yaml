@@ -2,3 +2,6 @@
   ros__parameters:
     show_radar_projections: True
     show_inference_image: True
+
+    image_height: 900
+    image_width: 1600

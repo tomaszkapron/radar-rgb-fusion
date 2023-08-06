@@ -22,11 +22,11 @@ from projected_radar_msgs.msg import ProjectedRadarArray
 from projected_radar_msgs.msg import RadarDetectionMatchArray
 
 class RadarImageVisualizer:
-    def __init__(self) -> None:
+    def __init__(self, width, height) -> None:
         self.br = CvBridge()
         self.dot_size = 5
-        self.width = 1280
-        self.height = 1024
+        self.width = width
+        self.height = height
 
     def visualize_scan(self, image, radar_arr, radar_match):
         image_cv = self.br.imgmsg_to_cv2(image)

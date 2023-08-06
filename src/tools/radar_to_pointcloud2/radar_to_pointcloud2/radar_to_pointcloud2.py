@@ -29,7 +29,7 @@ class MinimalSubscriber(Node):
         super().__init__('minimal_subscriber')
         self.subscription = self.create_subscription(
             RadarScan,
-            '/radar/tracked_points_T79',
+            '/RADAR_FRONT',
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning

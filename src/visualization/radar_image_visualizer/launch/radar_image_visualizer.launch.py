@@ -45,13 +45,14 @@ def launch_setup(context, *args, **kwargs):
 def generate_launch_description():
     declared_arguments = []
 
-    declared_arguments.append(
-            DeclareLaunchArgument(
-                'config_param_file',
-                default_value='param/defaults.param.yaml',
-                description='Node config (relative path).'
-            )
-    )
+    def add_launch_arg(name: str, default_value: str = None):
+        declared_arguments.append(
+            DeclareLaunchArgument(name, default_value=default_value)
+        )
+
+    add_launch_arg('config_param_file', 'param/defaults.param.yaml')
+    add_launch_arg('image_width', '1600')
+    add_launch_arg('image_height', '900')
 
     return LaunchDescription([
         *declared_arguments,

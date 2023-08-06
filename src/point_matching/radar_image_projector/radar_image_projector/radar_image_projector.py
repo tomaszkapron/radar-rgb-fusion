@@ -41,8 +41,8 @@ class RadarImageProjector:
         return projectedRadarArrMsg
     
     def radar_detection_to_image2(self, range: float, azimuth: float) -> tuple:     
-        Xr = range * np.sin(azimuth ) #* np.pi / 180.0)
-        Zr = range * np.cos(azimuth ) #* np.pi / 180.0)
+        Xr = range * np.sin(azimuth * np.pi / 180.0)
+        Zr = range * np.cos(azimuth * np.pi / 180.0)
         Yr = 0.0
         
         P_camera = np.dot(self.T, np.transpose(np.mat([Xr, Yr, Zr, 1.0])))
