@@ -41,7 +41,7 @@ class RadarDetectionMatcherNode(Node):
         
     def radar_callback(self, msg: ProjectedRadarArray):
         self.radar_detection_matcher.radar_projection = msg
-        self.radar_detection_matcher.match_detections()
+        self.radar_detection_matcher.match_detections_statistically()
         self.match_pub_.publish(self.radar_detection_matcher.matched_detections)
 
 def main(args=None):

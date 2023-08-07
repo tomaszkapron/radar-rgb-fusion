@@ -39,7 +39,7 @@
       "type": "pickString",
       "description": "Package name.",
       "default": "",
-      "options": ["example_package", "street_obj_detector", "scan_detection_matcher", "radar_image_projector", "radar_image_visualizer"]
+      "options": ["example_package", "street_obj_detector", "scan_detection_matcher", "radar_image_projector", "radar_image_visualizer", "radar_detection_matcher"]
     },
     {
       "id": "dirs",
@@ -53,7 +53,7 @@
       "type": "pickString",
       "description": "Program name.",
       "default": "",
-      "options": ["example_node_exe","street_object_detector_node", "radar_image_projector_node", "radar_image_visualizer_node"]
+      "options": ["example_node_exe","street_object_detector_node", "radar_image_projector_node", "radar_image_visualizer_node", "radar_detection_matcher_node"]
     },
     {
       "id": "config",

@@ -51,8 +51,8 @@ def generate_launch_description():
         )
 
     add_launch_arg('config_param_file', 'param/defaults.param.yaml')
-    add_launch_arg('image_width', '1600')
-    add_launch_arg('image_height', '900')
+    add_launch_arg('image_width', '1280')
+    add_launch_arg('image_height', '1024')
 
     return LaunchDescription([
         *declared_arguments,

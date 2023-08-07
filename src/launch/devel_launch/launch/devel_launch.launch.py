@@ -126,8 +126,8 @@ def generate_launch_description():
     # add_launch_arg('rosbag_source', 'local')
     # add_launch_arg('input_image_topic', '/camera/image_raw')
     # add_launch_arg('input_radar_topic', '/radar/raw_points_T79')
-    # add_launch_arg('image_width', 1280)
-    # add_launch_arg('image_height', 1024)
+    # add_launch_arg('image_width', '1280')
+    # add_launch_arg('image_height', '1024')
 
 
     return LaunchDescription([
