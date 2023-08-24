@@ -88,6 +88,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-humble-ros2-controllers \
     ros-humble-ros2-socketcan \
     ros-humble-ros-testing \
+    ros-humble-rosbag2-storage-mcap \
     ros-humble-rviz-visual-tools \
     ros-humble-tf-transformations
 
@@ -96,7 +97,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python3 -m pip --no-cache-dir install \
     ultralytics \
     pcl \
-    transforms3d
+    transforms3d \
+    scikit-learn
 
 # fix for https://github.com/NVlabs/instant-ngp/discussions/300
 RUN python3 -m pip uninstall -y \
